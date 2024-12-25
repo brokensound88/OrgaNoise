@@ -1,27 +1,61 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Spinner } from '../components/ui/loading/Spinner';
-import * as LazyPages from '../utils/lazyRoutes';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+import LoginForm from '../components/auth/LoginForm';
+import FileExplorer from '../components/drive/FileExplorer';
+import RepositoryViewer from '../components/github/RepositoryViewer';
+import FinancialDashboard from '../components/dashboard/FinancialDashboard';
+import ReportsPage from '../pages/ReportsPage';
+import AnalyticsDashboard from '../components/dashboard/AnalyticsDashboard';
 
-function PageLoader() {
+const AppRoutes: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Spinner size="lg" />
-    </div>
-  );
-}
-
-export function AppRoutes() {
-  return (
-    <Suspense fallback={<PageLoader />}>
+    <Router>
       <Routes>
-        <Route path="/" element={<LazyPages.Home />} />
-        <Route path="/about" element={<LazyPages.About />} />
-        <Route path="/projects" element={<LazyPages.Projects />} />
-        <Route path="/blog" element={<LazyPages.Blog />} />
-        <Route path="/contact" element={<LazyPages.Contact />} />
-        <Route path="*" element={<LazyPages.NotFound />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route
+          path="/drive"
+          element={
+            <ProtectedRoute>
+              <FileExplorer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/github"
+          element={
+            <ProtectedRoute>
+              <RepositoryViewer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/financials"
+          element={
+            <ProtectedRoute>
+              <FinancialDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <AnalyticsDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-    </Suspense>
+    </Router>
   );
-}
+};
+
+export default AppRoutes;
